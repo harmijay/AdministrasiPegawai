@@ -14,12 +14,10 @@ import java.util.Optional;
 public class KantorService {
 
     private final KantorRepository kantorRepository;
-    private Status status;
 
     @Autowired
-    public KantorService(KantorRepository kantorRepository, Status status) {
+    public KantorService(KantorRepository kantorRepository) {
         this.kantorRepository = kantorRepository;
-        this.status = status;
     }
 
     public List<Kantor> getKantors(){

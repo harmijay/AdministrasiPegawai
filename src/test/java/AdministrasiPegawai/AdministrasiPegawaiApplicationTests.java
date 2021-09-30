@@ -1,4 +1,4 @@
-package com.administrasipegawai.AdministrasiPegawai;
+package AdministrasiPegawai;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
