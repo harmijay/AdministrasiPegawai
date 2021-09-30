@@ -70,10 +70,10 @@ public class KantorService {
         if (name != null && name.length() > 0 && !isInputtedDataSame(name,kantor.getName())){
             kantor.setName(name);
         }
-        if (alamat != null && alamat.length() > 0 && !Objects.equals(kantor.getAlamat(), alamat)){
+        if (alamat != null && alamat.length() > 0 && !isInputtedDataSame(alamat, kantor.getAlamat())){
             kantor.setAlamat(alamat);
         }
-        if (status != null && status.length() > 0 && !Objects.equals(kantor.getStatus(), status)){
+        if (status != null && status.length() > 0 && !isInputtedDataSame(status, kantor.getStatus())){
             kantor.setStatus(status);
         }
     }
@@ -82,8 +82,4 @@ public class KantorService {
         return Objects.equals(inputtedData, checkData);
 
     }
-
-//    public boolean isInputtedDataNull(String inputtedData){
-//
-//    }
 }
