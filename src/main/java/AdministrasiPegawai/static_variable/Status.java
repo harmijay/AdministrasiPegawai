@@ -1,5 +1,8 @@
 package AdministrasiPegawai.static_variable;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Status {
     public static final String MSG_ID_KANTOR_NOT_FOUND = "Id Kantor Tidak Ditemukan!";
     public static final String MSG_ID_KANTOR_FOUND = "Id Kantor Ditemukan!";
