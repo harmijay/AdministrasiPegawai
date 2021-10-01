@@ -1,9 +1,11 @@
 package AdministrasiPegawai.pegawai;
 
+import AdministrasiPegawai.static_variable.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,12 +24,18 @@ public class PegawaiService {
         return pegawaiRepository.findAll();
     }
 
-    public void addNewPegawai(Pegawai pegawai) {
+    public HashMap<String, Object> addNewPegawai(Pegawai pegawai) {
+        HashMap<String, Object> response = new HashMap<>();
         Optional<Pegawai> pegawaiById = pegawaiRepository.findPegawaiById(pegawai.getId());
         if (pegawaiById.isPresent()) {
-            throw new IllegalStateException("id taken");
+            response.put(Status.KEY_STATUS,"501");
+            response.put(Status.KEY_MESSAGE,"Pegawai ID Taken");
+        }else{
+            response.put(Status.KEY_STATUS,"200");
+            response.put(Status.KEY_MESSAGE,"Success");
+            pegawaiRepository.save(pegawai);
         }
-        pegawaiRepository.save(pegawai);
+        return response;
     }
 
     public void deletePegawai(Long pegawaiId) {

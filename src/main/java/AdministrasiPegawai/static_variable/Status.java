@@ -14,4 +14,7 @@ public class Status {
     public static final int CODE_ADD_KANTOR_FAILED = 431;
 
     public static final String MSG_RETRIEVE_KANTOR_INFORMATION_FAILED = "Failed to retrieve Kantor information";
+
+    public static final String KEY_STATUS = "status";
+    public static final String KEY_MESSAGE = "message";
 }

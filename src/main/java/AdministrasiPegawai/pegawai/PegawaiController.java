@@ -21,7 +21,6 @@ public class PegawaiController {
     @Autowired
     private WebClient.Builder webClientBuilder;
 
-
     @Autowired
     public PegawaiController(PegawaiService pegawaiService, KantorService kantorService) {
         this.pegawaiService = pegawaiService;
@@ -33,21 +32,24 @@ public class PegawaiController {
         return pegawaiService.getPegawai();
     }
 
-    @PostMapping
-    public void registerNewPegawai(@RequestBody Pegawai pegawai) {
-        HashMap<String, Object> response = kantorService.validateIdKantor(pegawai.getId());
-        if (response != null) {
-            if (response.get("message").toString().equals(Status.MSG_ID_KANTOR_NOT_FOUND)) {
-                pegawaiService.addNewPegawai(pegawai);
+    @PostMapping(path = "/register-pegawai/")
+    public HashMap<String, Object> registerNewPegawai(@RequestBody Pegawai pegawai) {
+        HashMap<String, Object> registerResponse = new HashMap<>();
+        HashMap<String, Object> kantorResponse = kantorService.validateIdKantor(pegawai.getIdKantor());
+        if (kantorResponse != null) {
+            if (kantorResponse.get("message").toString().equals(Status.MSG_ID_KANTOR_FOUND)) {
+                return pegawaiService.addNewPegawai(pegawai);
             } else {
-                throw new IllegalStateException(response.get("message").toString());
+                return kantorResponse;
             }
         }else{
-            throw new IllegalStateException(AdministrasiPegawai.static_variable.Status.MSG_RETRIEVE_KANTOR_INFORMATION_FAILED);
+            registerResponse.put(Status.KEY_STATUS,"404");
+            registerResponse.put(Status.KEY_MESSAGE, Status.MSG_RETRIEVE_KANTOR_INFORMATION_FAILED);
+            return registerResponse;
         }
     }
 
-    @DeleteMapping(path = "{pegawaiId}")
+    @DeleteMapping(path = "/delete-pegawai/{pegawaiId}")
     public void deletePegawai(@PathVariable("pegawaiId") Long pegawaiId) {
         pegawaiService.deletePegawai(pegawaiId);
         HashMap<String, Object> data = new HashMap<String, Object>();
@@ -64,7 +66,7 @@ public class PegawaiController {
                 .bodyToMono(HashMap.class).block();
     }
 
-    @PutMapping
+    @PutMapping(path = "update-pegawai/")
     public void updatePegawai(
             @RequestBody Pegawai pegawai
     ) {
