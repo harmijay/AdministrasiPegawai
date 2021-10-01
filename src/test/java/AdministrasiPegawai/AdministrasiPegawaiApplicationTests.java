@@ -1,4 +1,4 @@
-package administrasipegawai.AdministrasiPegawai;
+package AdministrasiPegawai;
 
 import AdministrasiPegawai.AdministrasiPegawaiApplication;
 import org.junit.jupiter.api.Test;
