@@ -9,12 +9,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class KantorService {
 
     private final KantorRepository kantorRepository;
     private Status status;
+    Logger logger = LoggerFactory.getLogger(KantorService.class);
 
     @Autowired
     public KantorService(KantorRepository kantorRepository, Status status) {
@@ -56,30 +59,41 @@ public class KantorService {
     public void deleteKantor(Long kantorId){
         boolean kantorExists = kantorRepository.existsById(kantorId);
         if (!kantorExists){
-            throw new IllegalStateException("Kantor dengan id" + kantorId + "tidak ada!");
+            logger.info("Kantor dengan id" + kantorId + "tidak ada!");
         }
         kantorRepository.deleteById(kantorId);
     }
 
     @Transactional
     public void updateKantor(Long kantorId, String name, String alamat, String status){
+        checkIfUpdateKantorEligible(kantorId, name, alamat, status);
+    }
+
+    public void checkIfUpdateKantorEligible(Long kantorId, String name, String alamat, String status){
         Kantor kantor = kantorRepository.findById(kantorId).orElseThrow(() -> new IllegalStateException(
-                "kantor dengan id" + kantorId + "tidak ada"
+                "Kantor dengan id" + kantorId + "tidak ada!"
         ));
 
-        if (name != null && name.length() > 0 && !isInputtedDataSame(name,kantor.getName())){
+        if (isInputtedDataNull(name) && isInputCharMoreThanZero(name) && !isInputtedDataSame(name,kantor.getName())){
             kantor.setName(name);
         }
-        if (alamat != null && alamat.length() > 0 && !isInputtedDataSame(alamat, kantor.getAlamat())){
+        if (isInputtedDataNull(alamat) && isInputCharMoreThanZero(alamat) && !isInputtedDataSame(alamat, kantor.getAlamat())){
             kantor.setAlamat(alamat);
         }
-        if (status != null && status.length() > 0 && !isInputtedDataSame(status, kantor.getStatus())){
+        if (isInputtedDataNull(status) && isInputCharMoreThanZero(status) && !isInputtedDataSame(status, kantor.getStatus())){
             kantor.setStatus(status);
         }
     }
 
     public boolean isInputtedDataSame(String inputtedData, String checkData){
         return Objects.equals(inputtedData, checkData);
+    }
 
+    public boolean isInputtedDataNull(String inputtedData){
+        return inputtedData != null;
+    }
+
+    public boolean isInputCharMoreThanZero(String inputtedData){
+        return inputtedData.length() > 0;
     }
 }
